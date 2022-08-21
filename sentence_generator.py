@@ -37,7 +37,7 @@ class RandomGenerator(IGenerator):
         for sentence_word in sentence_words:
             if word_count != 0:
                 sentence += " "
-            sentence += words[index]
+            sentence += sentence_word
             word_count += 1
 
         return sentence
@@ -63,7 +63,7 @@ class SortedGenerator(IGenerator):
         for sentence_word in sentence_words:
             if word_count != 0:
                 sentence += " "
-            sentence += words[index]
+            sentence += sentence_word
             word_count += 1
 
         return sentence
@@ -121,7 +121,7 @@ class SentenceGenerator:
         self.words = words
 
     def generate(self):
-        return self.generator.generate(words)
+        return self.generator.generate(self.words)
 
     def add_word(self, word):
         modified_word = self.word_modifier.get_modified_word(word)
@@ -166,10 +166,11 @@ class SentenceGeneratorApplication:
         4: 'Back'
     }
 
-    # word related variables
+    # word-sentence variables
 
     MIN_WORD_LENGTH = 1
     MAX_WORD_LENGTH = 18
+    MAX_WORD_COUNT_IN_SENTENCE = 40
 
     wordsRSG = [
         "the", "at", "there", "some", "my",
@@ -191,7 +192,7 @@ class SentenceGeneratorApplication:
         "with", "when", "then", "no", "come",
         "his", "your", "them", "way", "made",
         "they", "can", "these", "could", "may",
-        "I", "said", "so", "people", "part"
+        "i", "said", "so", "people", "part"
     ]
 
     wordsSSG = [
@@ -214,30 +215,30 @@ class SentenceGeneratorApplication:
         "with", "when", "then", "no", "come",
         "his", "your", "them", "way", "made",
         "they", "can", "these", "could", "may",
-        "I", "said", "so", "people", "part"
+        "i", "said", "so", "people", "part"
     ]
 
     wordsOSG = [
-        "the", "at", "there", "some", "my",
-        "of", "be", "use", "her", "than",
-        "and", "this", "an", "would", "first",
-        "a", "have", "each", "make", "water",
-        "to", "from", "which", "like", "been",
-        "in", "or", "she", "him", "call",
-        "is", "one", "do", "into", "who",
-        "you", "had", "how", "time", "oil",
-        "that", "by", "their", "has", "its",
-        "it", "word", "if", "look", "now",
-        "he", "but", "will", "two", "find"
-        "was", "not", "up", "more", "long",
-        "for", "what", "other", "write", "down",
-        "on", "all", "about", "go", "day",
-        "are", "were", "out", "see", "did",
-        "as", "we", "many", "number", "get",
-        "with", "when", "then", "no", "come",
-        "his", "your", "them", "way", "made",
-        "they", "can", "these", "could", "may",
-        "I", "said", "so", "people", "part"
+        "EHT", "TA", "EREHT", "EMOS",
+        "YM", "FO", "EB", "ESU", "REH",
+        "NAHT", "DNA", "SIHT", "NA", "DLUOW",
+        "TSRIF", "A", "EVAH", "HCAE", "EKAM",
+        "RETAW", "OT", "MORF", "HCIHW", "EKIL",
+        "NEEB", "NI", "RO", "EHS", "MIH",
+        "LLAC", "SI", "ENO", "OD", "OTNI",
+        "OHW", "UOY", "DAH", "WOH", "EMIT",
+        "LIO", "TAHT", "YB", "RIEHT", "SAH",
+        "STI", "TI", "DROW", "FI", "KOOL",
+        "WON", "EH", "TUB", "LLIW", "OWT",
+        "SAWDNIF", "TON", "PU", "EROM", "GNOL",
+        "ROF", "TAHW", "REHTO", "ETIRW", "NWOD",
+        "NO", "LLA", "TUOBA", "OG", "YAD",
+        "ERA", "EREW", "TUO", "EES", "DID",
+        "SA", "EW", "YNAM", "REBMUN", "TEG",
+        "HTIW", "NEHW", "NEHT", "ON", "EMOC",
+        "SIH", "RUOY", "MEHT", "YAW", "EDAM",
+        "YEHT", "NAC", "ESEHT", "DLUOC", "YAM",
+        "I", "DIAS", "OS", "ELPOEP", "TRAP"
     ]
 
     # methods
@@ -318,11 +319,11 @@ class SentenceGeneratorApplication:
         # action menu
 
         elif self.menu_state == 1 and choice == 1:
-            print(menu[choice])
+            self.handle_generate_sentence()
         elif self.menu_state == 1 and choice == 2:
-            self.handle_word_input()
+            self.handle_add_word()
         elif self.menu_state == 1 and choice == 3:
-            self.sentence_generator.show_words()
+            self.handle_show_words()
         elif self.menu_state == 1 and choice == 4:
             self.sentence_generator = None
             self.change_menu_state()
@@ -334,7 +335,33 @@ class SentenceGeneratorApplication:
         elif self.menu_state == self.action_menu_state:
             self.menu_title = self.action_menu_title
 
-    def handle_word_input(self):
+    def handle_generate_sentence(self):
+        sentence = self.sentence_generator.generate()
+        words = sentence.split(" ")
+
+        print(f"[GENERATED] by {self.menu_title}")
+        print("-----------------------------------------------")
+
+        column_count = 10
+        column_index = 0
+        word_count = len(words)
+        word_index = 0
+        for word in words:
+            word_index += 1
+            if word_index == word_count:
+                print(word, end=".")
+            else:
+                print(word, end=' ')
+            column_index = (column_index+1)%column_count
+            if column_index == 0:
+                print()
+        if column_index != 0:
+            print("\n")
+
+        print(f"Length      :   {len(sentence)}")
+        print(f"Word Count  :   {len(words)}")
+
+    def handle_add_word(self):
         entered_words = ''
         print("Enter Words: [if multiple words : separate using space]")
         print()
@@ -353,6 +380,9 @@ class SentenceGeneratorApplication:
             elif self.menu_title == "Ordered Sentence Generator":
                 self.wordsOSG = self.sentence_generator.add_word(entered_word)
         print("[BACK TO MENU]")
+
+    def handle_show_words(self):
+        return self.sentence_generator.show_words()
 
     def launch(self):
         # menu loop
