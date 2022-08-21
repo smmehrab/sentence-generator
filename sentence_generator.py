@@ -10,7 +10,7 @@ import string
 import random
 from typing import List
 from abc import ABC, abstractmethod
-import os
+from os import system, name
 
 #-----------------------------------------------------
 
@@ -186,8 +186,16 @@ class SentenceGeneratorApplication:
         self.sentence_generator = None
         pass
 
+    def clear_console(self):
+        # windows
+        if name == 'nt':
+            _ = system('cls')
+        # linux/mac
+        else:
+            _ = system('clear')
+
     def print_menu(self):
-        os.system("clear")
+        self.clear_console()
         
         menu = {}
         if self.menu_state == 0:
