@@ -1,8 +1,18 @@
+#-----------------------------------------------------
+# fullname      :   s.m.mehrabul islam
+# roll          :   sh-86
+# email         :   smmehrabul-2017614964@cs.du.ac.bd
+# institute     :   university of dhaka, bangladesh
+# session       :   2017-2018
+#-----------------------------------------------------
+
 import string
 import random
 from typing import List
 from abc import ABC, abstractmethod
 import os
+
+#-----------------------------------------------------
 
 class IGenerator(ABC):
     @abstractmethod
@@ -21,6 +31,8 @@ class OrderedGenerator(IGenerator):
     def generate(self, words):
         pass
 
+#-----------------------------------------------------
+
 class IWordModifier(ABC):
     @abstractmethod
     def get_modified_word(self, word):
@@ -37,9 +49,9 @@ class UppercaseReverseWord(IWordModifier):
         word_upper_reverse = word_upper[::-1]
         return word_upper_reverse
 
-class SentenceGenerator:
+#-----------------------------------------------------
 
-    words = []
+class SentenceGenerator:
 
     def __init__(self, words, generator: IGenerator, word_modifier: IWordModifier):
         self.generator = generator
@@ -62,13 +74,14 @@ class SentenceGenerator:
             column_index = (column_index+1)%column_count
             if column_index == 0:
                 print()
-        print()
+        if column_index != 0:
+            print()
 
-
+#-----------------------------------------------------
 
 class SentenceGeneratorApplication:
 
-    # Menu Variables
+    # menu variables
 
     generator_menu_state = 0
     generator_menu_title = 'Generators'
@@ -87,15 +100,81 @@ class SentenceGeneratorApplication:
         4: 'Back'
     }
 
-    # Words
+    # word related variables
 
     MIN_WORD_LENGTH = 1
     MAX_WORD_LENGTH = 18
-    wordsRSG = ["hellohellohello", "hello", "hello", "hello", "hello", "hello", "hello", "hello", "hello", "hello"]
-    wordsSSG = ["hello", "hello", "hello", "hello", "hello", "hello", "hello", "hello", "hello", "hello"]
-    wordsOSG = ["hello", "hello", "hello", "hello", "hello", "hello", "hello", "hello", "hello", "hello"]
 
-    # Methods
+    wordsRSG = [
+        "the", "at", "there", "some", "my",
+        "of", "be", "use", "her", "than",
+        "and", "this", "an", "would", "first",
+        "a", "have", "each", "make", "water",
+        "to", "from", "which", "like", "been",
+        "in", "or", "she", "him", "call",
+        "is", "one", "do", "into", "who",
+        "you", "had", "how", "time", "oil",
+        "that", "by", "their", "has", "its",
+        "it", "word", "if", "look", "now",
+        "he", "but", "will", "two", "find"
+        "was", "not", "up", "more", "long",
+        "for", "what", "other", "write", "down",
+        "on", "all", "about", "go", "day",
+        "are", "were", "out", "see", "did",
+        "as", "we", "many", "number", "get",
+        "with", "when", "then", "no", "come",
+        "his", "your", "them", "way", "made",
+        "they", "can", "these", "could", "may",
+        "I", "said", "so", "people", "part"
+    ]
+
+    wordsSSG = [
+        "the", "at", "there", "some", "my",
+        "of", "be", "use", "her", "than",
+        "and", "this", "an", "would", "first",
+        "a", "have", "each", "make", "water",
+        "to", "from", "which", "like", "been",
+        "in", "or", "she", "him", "call",
+        "is", "one", "do", "into", "who",
+        "you", "had", "how", "time", "oil",
+        "that", "by", "their", "has", "its",
+        "it", "word", "if", "look", "now",
+        "he", "but", "will", "two", "find"
+        "was", "not", "up", "more", "long",
+        "for", "what", "other", "write", "down",
+        "on", "all", "about", "go", "day",
+        "are", "were", "out", "see", "did",
+        "as", "we", "many", "number", "get",
+        "with", "when", "then", "no", "come",
+        "his", "your", "them", "way", "made",
+        "they", "can", "these", "could", "may",
+        "I", "said", "so", "people", "part"
+    ]
+
+    wordsOSG = [
+        "the", "at", "there", "some", "my",
+        "of", "be", "use", "her", "than",
+        "and", "this", "an", "would", "first",
+        "a", "have", "each", "make", "water",
+        "to", "from", "which", "like", "been",
+        "in", "or", "she", "him", "call",
+        "is", "one", "do", "into", "who",
+        "you", "had", "how", "time", "oil",
+        "that", "by", "their", "has", "its",
+        "it", "word", "if", "look", "now",
+        "he", "but", "will", "two", "find"
+        "was", "not", "up", "more", "long",
+        "for", "what", "other", "write", "down",
+        "on", "all", "about", "go", "day",
+        "are", "were", "out", "see", "did",
+        "as", "we", "many", "number", "get",
+        "with", "when", "then", "no", "come",
+        "his", "your", "them", "way", "made",
+        "they", "can", "these", "could", "may",
+        "I", "said", "so", "people", "part"
+    ]
+
+    # methods
 
     def __init__(self):
         self.menu_state = self.generator_menu_state
@@ -145,7 +224,7 @@ class SentenceGeneratorApplication:
         elif self.menu_state == 1:
             menu = self.action_menu
 
-        # Generator Menu
+        # generator menu
         
         if self.menu_state == 0 and choice == 1:
             self.sentence_generator = SentenceGenerator(self.wordsRSG, RandomGenerator(), LowercaseWord())
@@ -162,7 +241,7 @@ class SentenceGeneratorApplication:
         elif self.menu_state == 0 and choice == 4:
             exit()
 
-        # Action Menu
+        # action menu
 
         elif self.menu_state == 1 and choice == 1:
             print(menu[choice])
@@ -171,7 +250,7 @@ class SentenceGeneratorApplication:
         elif self.menu_state == 1 and choice == 3:
             self.sentence_generator.show_words()
         elif self.menu_state == 1 and choice == 4:
-            # print(choice)
+            self.sentence_generator = None
             self.change_menu_state()
 
     def change_menu_state(self):
@@ -197,20 +276,22 @@ class SentenceGeneratorApplication:
             if self.menu_title == "Random Sentence Generator":
                 self.wordsRSG = words
             elif self.menu_title == "Sorted Sentence Generator":
-                self.wordsRSG = words
+                self.wordsSSG = words
             elif self.menu_title == "Ordered Sentence Generator":
-                self.wordsRSG = words
+                self.wordsOSG = words
             print(f"[ADDED] {words[-1]}")
         print("[BACK TO MENU]")
 
     def launch(self):
-        # Menu Loop
+        # menu loop
         previous_menu_state = -1
         while True:
             if self.menu_state != previous_menu_state:
                 self.print_menu()            
             previous_menu_state = self.menu_state
             self.handle_menu()
+
+#-----------------------------------------------------
 
 if __name__=='__main__':
     app = SentenceGeneratorApplication()
