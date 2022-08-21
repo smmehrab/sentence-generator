@@ -149,9 +149,14 @@ class SentenceGeneratorApplication:
 
     # menu variables
 
+    MENU_OPTION_COUNT = 5
+    MENU_OPTION_MIN = 0
+    MENU_OPTION_MAX = 4
+
     generator_menu_state = 0
     generator_menu_title = 'Generators'
     generator_menu = {
+        0: 'Refresh',
         1: 'Random Sentence Generator',
         2: 'Sorted Sentence Generator',
         3: 'Ordered Sentence Generator',
@@ -160,6 +165,7 @@ class SentenceGeneratorApplication:
 
     action_menu_state = 1
     action_menu = {
+        0: 'Refresh',
         1: 'Generate Sentence',
         2: 'Add Word',
         3: 'Show Words',
@@ -280,14 +286,14 @@ class SentenceGeneratorApplication:
         choice = input('> ')
         print()
         while not choice.isdigit():
-            print('[INVALID] please enter a number between 1 and 4, as the menu suggests')
+            print(f"[INVALID] please enter a number between {MENU_OPTION_MIN} and {MENU_OPTION_MAX}, as the menu suggests")
             print()
             choice = input('> ')
             print()
         choice = int(choice)
 
-        if choice > 4 or choice < 1:
-            print('[INVALID] please enter a number between 1 and 4, as the menu suggests')            
+        if choice > 4 or choice < 0:
+            print(f"[INVALID] please enter a number between {MENU_OPTION_MIN} and {MENU_OPTION_MAX}, as the menu suggests")
         else:
             self.handle_options(choice)
 
@@ -298,6 +304,10 @@ class SentenceGeneratorApplication:
             menu = self.generator_menu
         elif self.menu_state == 1:
             menu = self.action_menu
+
+        if choice == 0:
+            self.refresh()
+            return
 
         # generator menu
         
@@ -383,6 +393,12 @@ class SentenceGeneratorApplication:
 
     def handle_show_words(self):
         return self.sentence_generator.show_words()
+
+    def refresh(self):
+        self.menu_state = self.generator_menu_state
+        self.menu_title = self.generator_menu_title
+        self.sentence_generator = None
+        self.launch()
 
     def launch(self):
         # menu loop
