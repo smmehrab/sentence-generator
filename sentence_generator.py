@@ -49,13 +49,12 @@ class SentenceGenerator:
     def generate(self):
         return self.generator.generate(words)
 
-    def add_word(self):
+    def add_word(self, word):
         modified_word = self.word_modifier.get_modified_word(word)
-        words.append(modified_word)
-        return words
+        self.words.append(modified_word)
+        return self.words
 
     def show_words(self):
-        print()
         column_count = 5
         column_index = 0
         for word in self.words:
@@ -64,7 +63,8 @@ class SentenceGenerator:
             if column_index == 0:
                 print()
         print()
-            
+
+
 
 class SentenceGeneratorApplication:
 
@@ -89,6 +89,8 @@ class SentenceGeneratorApplication:
 
     # Words
 
+    MIN_WORD_LENGTH = 1
+    MAX_WORD_LENGTH = 18
     wordsRSG = ["hellohellohello", "hello", "hello", "hello", "hello", "hello", "hello", "hello", "hello", "hello"]
     wordsSSG = ["hello", "hello", "hello", "hello", "hello", "hello", "hello", "hello", "hello", "hello"]
     wordsOSG = ["hello", "hello", "hello", "hello", "hello", "hello", "hello", "hello", "hello", "hello"]
@@ -109,7 +111,6 @@ class SentenceGeneratorApplication:
             menu = self.generator_menu
         elif self.menu_state == 1:
             menu = self.action_menu
-        
 
         print("\n====================================")
         print(self.menu_title)
@@ -117,16 +118,22 @@ class SentenceGeneratorApplication:
 
         for key in menu.keys():
             print (key, ':  ', menu[key])
-        print()
+        
 
     def handle_menu(self):
         choice = ''
-        try:
-            choice = int(input('> '))
-        except:
-            print('[INVALID] please enter a number.')
+        print()
+        choice = input('> ')
+        print()
+        while not choice.isdigit():
+            print('[INVALID] please enter a number between 1 and 4, as the menu suggests')
+            print()
+            choice = input('> ')
+            print()
+        choice = int(choice)
+
         if choice > 4 or choice < 1:
-            print('[INVALID] please enter a number between 1 and 4.')            
+            print('[INVALID] please enter a number between 1 and 4, as the menu suggests')            
         else:
             self.handle_options(choice)
 
@@ -159,25 +166,42 @@ class SentenceGeneratorApplication:
 
         elif self.menu_state == 1 and choice == 1:
             print(menu[choice])
-            
         elif self.menu_state == 1 and choice == 2:
-
-            # self.sentence_generator.add_word(word)
-            print(menu[choice])
-            
+            self.handle_word_input()
         elif self.menu_state == 1 and choice == 3:
             self.sentence_generator.show_words()
-            
         elif self.menu_state == 1 and choice == 4:
             # print(choice)
             self.change_menu_state()
 
     def change_menu_state(self):
-            self.menu_state = 1-self.menu_state
-            if self.menu_state == self.generator_menu_state:
-                self.menu_title = self.generator_menu_title
-            elif self.menu_state == self.action_menu_state:
-                self.menu_title = self.action_menu_title
+        self.menu_state = 1-self.menu_state
+        if self.menu_state == self.generator_menu_state:
+            self.menu_title = self.generator_menu_title
+        elif self.menu_state == self.action_menu_state:
+            self.menu_title = self.action_menu_title
+
+    def handle_word_input(self):
+        entered_words = ''
+        print("Enter Words: [if multiple words : separate using space]")
+        print()
+        entered_words = input('> ')
+        print()
+
+        entered_words = entered_words.split(" ")
+        for entered_word in entered_words:
+            if len(entered_word) < 1 or len(entered_word) > 18:
+                print(f"[INVALID] couldn't add \"{entered_word}\"")
+                print(f"[Note] word length must be between {self.MIN_WORD_LENGTH} and {self.MAX_WORD_LENGTH}.")
+            words = self.sentence_generator.add_word(entered_word)
+            if self.menu_title == "Random Sentence Generator":
+                self.wordsRSG = words
+            elif self.menu_title == "Sorted Sentence Generator":
+                self.wordsRSG = words
+            elif self.menu_title == "Ordered Sentence Generator":
+                self.wordsRSG = words
+            print(f"[ADDED] {words[-1]}")
+        print("[BACK TO MENU]")
 
     def launch(self):
         # Menu Loop
