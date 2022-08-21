@@ -63,7 +63,11 @@ class SentenceGenerator:
 
     def add_word(self, word):
         modified_word = self.word_modifier.get_modified_word(word)
-        self.words.append(modified_word)
+        if modified_word in self.words:
+            print(f"[DUPLICATE] {modified_word}")
+        else:
+            self.words.append(modified_word)
+            print(f"[ADDED] {self.words[-1]}")
         return self.words
 
     def show_words(self):
@@ -272,14 +276,12 @@ class SentenceGeneratorApplication:
             if len(entered_word) < 1 or len(entered_word) > 18:
                 print(f"[INVALID] couldn't add \"{entered_word}\"")
                 print(f"[Note] word length must be between {self.MIN_WORD_LENGTH} and {self.MAX_WORD_LENGTH}.")
-            words = self.sentence_generator.add_word(entered_word)
             if self.menu_title == "Random Sentence Generator":
-                self.wordsRSG = words
+                self.wordsRSG = self.sentence_generator.add_word(entered_word)
             elif self.menu_title == "Sorted Sentence Generator":
-                self.wordsSSG = words
+                self.wordsSSG = self.sentence_generator.add_word(entered_word)
             elif self.menu_title == "Ordered Sentence Generator":
-                self.wordsOSG = words
-            print(f"[ADDED] {words[-1]}")
+                self.wordsOSG = self.sentence_generator.add_word(entered_word)
         print("[BACK TO MENU]")
 
     def launch(self):
