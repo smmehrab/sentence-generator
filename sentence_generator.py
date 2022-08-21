@@ -21,15 +21,77 @@ class IGenerator(ABC):
 
 class RandomGenerator(IGenerator):
     def generate(self, words):
-        pass
+        total_word_count = len(words)
+        sentence_word_count = random.randint(1, total_word_count)
+        
+        word_count = 0
+        sentence_words = []
+        while word_count != sentence_word_count:
+            # random
+            index = random.randint(0, total_word_count-1)
+            sentence_words.append(words[index])
+            word_count += 1
+
+        word_count = 0
+        sentence = ""
+        for sentence_word in sentence_words:
+            if word_count != 0:
+                sentence += " "
+            sentence += words[index]
+            word_count += 1
+
+        return sentence
+        
 
 class SortedGenerator(IGenerator):
     def generate(self, words):
-        pass
+        total_word_count = len(words)
+        sentence_word_count = random.randint(1, total_word_count)
+        
+        word_count = 0
+        sentence_words = []
+        while word_count != sentence_word_count:
+            index = random.randint(0, total_word_count-1)
+            sentence_words.append(words[index])
+            word_count += 1
+
+        # sorting
+        sentence_words.sort()
+
+        word_count = 0
+        sentence = ""
+        for sentence_word in sentence_words:
+            if word_count != 0:
+                sentence += " "
+            sentence += words[index]
+            word_count += 1
+
+        return sentence
 
 class OrderedGenerator(IGenerator):
     def generate(self, words):
-        pass
+        total_word_count = len(words)
+        sentence_word_count = random.randint(1, total_word_count)
+        
+        word_index_count = 0
+        sentence_word_indices = []
+        while word_index_count != sentence_word_count:
+            index = random.randint(0, total_word_count-1)
+            sentence_word_indices.append(index)
+            word_index_count += 1
+
+        # ordering
+        sentence_word_indices.sort()
+
+        word_count = 0
+        sentence = ""
+        for sentence_word_index in sentence_word_indices:
+            if word_count != 0:
+                sentence += " "
+            sentence += words[sentence_word_index]
+            word_count += 1
+
+        return sentence
 
 #-----------------------------------------------------
 
